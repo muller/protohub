@@ -1,6 +1,16 @@
 
-git clone --quiet https://gist.github.com/$1.git /in
-mkdir -p /out/java /out/python /out/cpp /out/javac
-protoc -I=/in --java_out=/out/java --cpp_out=/out/cpp --python_out=/out/python /in/*.proto
-javac -g -cp /opt/protobuf-java/protobuf-java-2.6.1.jar -d /out/javac $(find /out/java -name "*.java")
-tar c out
+IN=/in/$1
+OUT=/out/$1
+mkdir -p /in $OUT/java $OUT/python $OUT/cpp $OUT/go $OUT/javac
+
+git clone --quiet https://gist.github.com/$1.git $IN
+
+protoc -I=$IN \
+ --go_out=$OUT/go \
+ --cpp_out=$OUT/cpp \
+ --java_out=$OUT/java \
+ --python_out=$OUT/python \
+ $IN/*.proto
+
+javac -g -cp /usr/local/protobuf-java-2.6.1.jar -d $OUT/javac \
+  $(find $OUT/java -name "*.java")
